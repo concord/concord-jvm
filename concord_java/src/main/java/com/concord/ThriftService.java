@@ -1,27 +1,21 @@
-/**
- * Serve Computation class for Concord
- * Synopsis: Serves a computation for consumption in concord
- */
-
 package com.concord;
+
 import com.concord.Computation;
 import com.concord.swift.ComputationService;
 import com.concord.swift.Constants;
 import com.concord.swift.Endpoint;
-
 import com.facebook.swift.service.*;
 import com.facebook.swift.codec.*;
-
+import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 
 public class ThriftService {
+  private ThriftServer server;
 
-  private final ThriftServer server;
-
-  /**
-   * Creates a new thrift server
-   */
   public ThriftService(Computation c, Endpoint listen, Endpoint proxy) {
+    Preconditions.checkNotNull(c);
+    Preconditions.checkNotNull(listen);
+    Preconditions.checkNotNull(proxy);
     ThriftServiceProcessor processor = new ThriftServiceProcessor(
       new ThriftCodecManager(),
       new ArrayList<ThriftEventHandler>(),
@@ -31,23 +25,18 @@ public class ThriftService {
     ThriftServerConfig serverConfig = new ThriftServerConfig()
       .setBindAddress(listen.getIp())
       .setPort(listen.getPort());
-
-    this.server = new ThriftServer(processor, serverConfig);
+    try {
+       this.server = new ThriftServer(processor, serverConfig);
+    }catch(Exception e){
+      System.err.println("Error creating thrift service: " + e);
+      System.exit(1);
+    }
   }
 
-  /**
-   * Starts the thrift server.
-   */
   public void serve() {
-    System.out.println("Starting service");
-    server.start();
+    this.server.start();
   }
-
-  /**
-   * Stops the thrift server
-   */
   public void stop() {
-    System.out.println("Stopping service");
-    server.close();
+    this.server.close();
   }
 }

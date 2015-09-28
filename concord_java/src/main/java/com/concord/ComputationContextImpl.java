@@ -1,29 +1,23 @@
-/**
- * ComputationContext class for Concord
- * Synopsis: ComputationContextImpl
- */
-
 package com.concord;
 
 import com.concord.Metadata;
 import com.concord.ComputationContext;
-
 import com.concord.swift.ComputationTx;
 import com.concord.swift.Record;
 import com.concord.swift.BoltProxyService;
 import com.concord.swift.BoltError;
 import org.apache.thrift.TException;
-
+import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import java.util.*;
 
 public class ComputationContextImpl extends ComputationContext {
   private final List<Record> records;
-
   private final Map<String, Long> timers;
-
   private final BoltProxyService client;
 
   public ComputationContextImpl(BoltProxyService client) {
+    Preconditions.checkNotNull(client);
     this.client = client;
     this.timers = new HashMap<String, Long>();
     this.records = new ArrayList<Record>();
@@ -37,8 +31,12 @@ public class ComputationContextImpl extends ComputationContext {
     return timers;
   }
 
-  public void produceRecord(byte[] streamName, byte[] binaryKey, byte[] binaryData) {
-    assert streamName != null;
+  public void produceRecord(byte[] streamName,
+                            byte[] binaryKey,
+                            byte[] binaryData) {
+    Preconditions.checkNotNull(streamName);
+    Preconditions.checkNotNull(binaryKey);
+    Preconditions.checkNotNull(binaryData);
     Record r = new Record
       .Builder()
       .setKey(binaryKey)
@@ -49,32 +47,28 @@ public class ComputationContextImpl extends ComputationContext {
   }
 
   public void setTimer(String key, long time) {
-    if (time > 0) {
-      timers.put(key, time);
-    } else {
-      System.out.println("Timeout MUST be greater than 0. Skipping timeout: " + time);
-    }
+    Preconditions.checkNotNull(key);
+    Preconditions.checkState(time > 0);
+    timers.put(key, time);
   }
 
   public void setState(String key, byte[] binaryValue) {
+    Preconditions.checkNotNull(key);
+    Preconditions.checkNotNull(binaryValue);
     try {
       client.setState(key, binaryValue);
-    } catch (BoltError boltError) {
-      System.out.println("Error when attempting to set state: " + boltError);
-    } catch (TException thriftError) {
-      System.out.println("Thrift error occurred when setting state: " + thriftError);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 
   public byte[] getState(String key) {
     try {
-      return client.getState(key);
-    } catch (BoltError boltError) {
-      System.out.println("Error when attempting to fetch state: " + boltError);
-      return null;
-    } catch (TException thriftError) {
-      System.out.println("Thrift error occurred when fetching state: " + thriftError);
-      return null;
+      byte[] ret = client.getState(key);
+      Verify.verify(ret != null, "Returned state, must always be a valid");
+      return ret;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 }

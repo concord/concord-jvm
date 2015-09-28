@@ -9,25 +9,16 @@ object ConcordJvmBuild extends Build {
   )
 
   lazy val rawapi = project
-    .settings(crossPaths := false, autoScalaLibrary := false)
+    .settings(crossPaths := false, autoScalaLibrary := false) // java only
 
   lazy val concord_java = project
+    .settings(autoScalaLibrary := false) // java only
     .settings(scalaSettings: _*)
-    .dependsOn(rawapi)
-
-  lazy val concord_scala = project
-    .settings(scalaSettings: _*)
-    .dependsOn(rawapi)
-
-  lazy val getting_started = project
-    .settings(scalaSettings: _*)
-    .dependsOn(concord_java)
     .dependsOn(rawapi)
 
   lazy val root = (project in file("."))
     .aggregate(
       rawapi,
-      concord_scala,
       concord_java
   )
 }

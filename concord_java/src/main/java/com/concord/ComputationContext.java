@@ -1,8 +1,3 @@
-/**
- * ComputationContext class for Concord
- * Synopsis: Helper class for user to interface with framework
- */
-
 package com.concord;
 
 public abstract class ComputationContext {

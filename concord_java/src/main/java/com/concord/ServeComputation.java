@@ -1,15 +1,11 @@
-/**
- * Serve Computation class for Concord
- * Synopsis: Serves a computation for consumption in concord
- */
-
 package com.concord;
 
 import com.concord.Computation;
 import com.concord.ThriftService;
-
 import com.concord.swift.Endpoint;
 import com.concord.swift.Constants;
+import com.google.common.base.Verify;
+import com.google.common.base.Preconditions;
 
 /**
  * `ServeComputation`
@@ -21,11 +17,10 @@ import com.concord.swift.Constants;
 public class ServeComputation {
 
   private static Endpoint addrStringToEndpoint(String addrStr) {
-    String[] contents = System.getenv(Constants.kConcordEnvKeyClientListenAddr)
-      .split(":", 2);
-    if (contents.length != 2) {
-      return null;
-    }
+    Preconditions.checkNotNull(addrStr);
+    String[] contents = System.getenv(addrStr).split(":", 2);
+    Verify.verify(contents.length == 2, "Cannot get ip:port for listen addr");
+
     return new Endpoint.Builder()
       .setIp(contents[0])
       .setPort(Short.parseShort(contents[1]))
@@ -34,18 +29,15 @@ public class ServeComputation {
 
   /**
    * Launch a computation
-   *
    * @param c: Computation to run on concord.
    */
-  public static void serve(Computation c) throws Exception {
+  public static void serve(Computation c) {
+    Preconditions.checkNotNull(c);
     Endpoint listen = addrStringToEndpoint(
       System.getenv(Constants.kConcordEnvKeyClientListenAddr));
     Endpoint proxy = addrStringToEndpoint(
       System.getenv(Constants.kConcordEnvKeyClientProxyAddr));
 
-    if (listen == null || proxy == null) {
-      throw new Exception("Proxy and/or listen addr is misconfigured");
-    }
     ThriftService tserver = new ThriftService(c, listen, proxy);
     tserver.serve();
   }
