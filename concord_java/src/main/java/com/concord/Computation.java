@@ -1,8 +1,3 @@
-/**
- * Computation class for Concord
- * Synopsis: Computation class and helper function
- */
-
 package com.concord;
 
 import com.concord.Metadata;
@@ -18,7 +13,7 @@ public abstract class Computation {
    *
    * @param ctx: The computation context object provided by the system.
    */
-  public abstract void init(ComputationContext ctx) throws Exception;
+  public abstract void init(ComputationContext ctx);
 
   /**
    * Process incoming records on one of the computation's `istreams`.
@@ -26,8 +21,7 @@ public abstract class Computation {
    * @param ctx: The computation context object provided by the system.
    * @param record: The `Record` to emit downstream.
    */
-  public abstract void processRecord(ComputationContext ctx, Record record)
-    throws Exception;
+  public abstract void processRecord(ComputationContext ctx, Record record);
 
   /**
    * Process a timer callback previously set via `setTimer`.
@@ -36,8 +30,10 @@ public abstract class Computation {
    * @param key: The name of the timer.
    * @param time: The time (in ms) for which teh callback was scheduled.
    */
-  public abstract void processTimer(ComputationContext ctx, String key, long time)
-    throws Exception;
+  public abstract void processTimer(ComputationContext ctx,
+                                    String key,
+                                    long time);
+
 
   /**
    * This function is called by the concord proxy to identify the user
@@ -45,5 +41,5 @@ public abstract class Computation {
    *
    * @returns: Metadata object representing the user computation.
    */
-  public abstract Metadata metadata() throws Exception;
+  public abstract Metadata metadata();
 }

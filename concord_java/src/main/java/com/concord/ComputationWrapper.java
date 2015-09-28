@@ -8,13 +8,13 @@ package com.concord;
 import com.concord.Metadata;
 import com.concord.ComputationContextImpl;
 import com.concord.Tuple;
-
 import com.concord.swift.*;
 import com.facebook.swift.service.*;
 import com.facebook.nifty.client.FramedClientConnector;
 import com.google.common.net.HostAndPort;
 import org.apache.thrift.TException;
-
+import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import java.util.*;
 
 public class ComputationWrapper implements ComputationService {
@@ -29,6 +29,8 @@ public class ComputationWrapper implements ComputationService {
   private final Endpoint proxyInfo;
 
   public ComputationWrapper(Computation c, Endpoint proxyInfo) {
+    Preconditions.checkNotNull(c);
+    Preconditions.checkNotNull(proxyInfo);
     this.userService = c;
     this.proxyInfo = proxyInfo;
 
@@ -40,23 +42,19 @@ public class ComputationWrapper implements ComputationService {
         .createClient(connector, BoltProxyService.class)
         .get();
       client.registerWithScheduler(this.boltMetadata());
-    } catch (BoltError userError) {
-      ;
-    } catch (TException thriftException) {
-      ;
-    } catch (Exception exception) {
-      ;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
+    Preconditions.checkNotNull(client);
     this.client = client;
   }
 
-  public ComputationTx init() throws BoltError {
-    ComputationContextImpl ctx = new ComputationContextImpl(client);
+  public ComputationTx init() {
+    ComputationContextImpl ctx = new ComputationContextImpl(this.client);
     try {
       this.userService.init(ctx);
-    } catch (Exception userException) {
-      System.out.println(userException);
-      System.out.println("Exception in client init");
+    } catch (Exception e) {
+      System.err.println("Exception in client init: " + e);
       System.exit(1);
     }
     return new ComputationTx.Builder()
@@ -66,12 +64,12 @@ public class ComputationWrapper implements ComputationService {
   }
 
   public ComputationTx boltProcessTimer(String key, long time) throws BoltError {
+    Preconditions.checkNotNull(key);
     ComputationContextImpl ctx = new ComputationContextImpl(client);
     try {
       this.userService.processTimer(ctx, key, time);
-    } catch (Exception userException) {
-      System.out.println(userException);
-      System.out.println("Exception in client processTimer");
+    } catch (Exception e) {
+      System.err.println("Exception in client processTimer: " + e);
       System.exit(1);
     }
     return new ComputationTx.Builder()
@@ -80,8 +78,7 @@ public class ComputationWrapper implements ComputationService {
       .build();
   }
 
-  public List<ComputationTx> boltProcessRecords(List<Record> records)
-    throws BoltError {
+  public List<ComputationTx> boltProcessRecords(List<Record> records) {
     List<ComputationTx> ctxs = new ArrayList<ComputationTx>();
     try {
       for (Record r : records) {
@@ -92,31 +89,27 @@ public class ComputationWrapper implements ComputationService {
                  .setTimers(ctx.getTimers())
                  .build());
       }
-    } catch (Exception userException) {
-      System.out.println(userException);
-      System.out.println("Exception in client processTimer");
+    } catch (Exception e) {
+      System.err.println("Exception in client processTimer: " + e);
       System.exit(1);
     }
     return ctxs;
   }
 
-  public ComputationMetadata boltMetadata() throws BoltError {
+  public ComputationMetadata boltMetadata() {
     try {
-      System.out.println("Getting client metadata");
       Metadata metadata = this.userService.metadata();
-
-      ComputationMetadata cpmd = new ComputationMetadata.Builder()
+      return new ComputationMetadata.Builder()
         .setName(metadata.name)
         .setIstreams(enrichStream(metadata.istreams))
         .setOstreams(new ArrayList<String>(metadata.ostreams))
         .setProxyEndpoint(this.proxyInfo)
         .build();
-      System.out.println("Metadata fetched: " + cpmd.toString());
-      return cpmd;
-    } catch (Exception userException) {
-      System.out.println(userException);
+    } catch (Exception e) {
+      System.err.println("Exception generating metadata: " + e);
       System.exit(1);
     }
+    // compiler happy
     return null;
   }
 
