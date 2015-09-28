@@ -1,0 +1,10 @@
+{
+  "zookeeper_hosts": "localhost:2181",
+  "zookeeper_path": "/concord",
+  "executable_arguments": ["getting-started-java-assembly-1.0.jar"],
+  "executable_name": "runner.bash",
+  "compress_files": ["getting-started-java-assembly-1.0.jar", "runner.bash"],
+  "computation_name": "word-source",
+  "mem": 1024,
+  "cpus": 1.0
+}
