@@ -1,13 +1,8 @@
-/**
- * ComputationWrapper class for Concord
- * Synopsis: Wrapper around user Computation. Interfaces with thrift server.
- */
-
 package com.concord;
 
 import com.concord.Metadata;
 import com.concord.ComputationContextImpl;
-import com.concord.Tuple;
+import com.concord.StreamTuple;
 import com.concord.swift.*;
 import com.facebook.swift.service.*;
 import com.facebook.nifty.client.FramedClientConnector;
@@ -63,7 +58,7 @@ public class ComputationWrapper implements ComputationService {
       .build();
   }
 
-  public ComputationTx boltProcessTimer(String key, long time) throws BoltError {
+  public ComputationTx boltProcessTimer(String key, long time) {
     Preconditions.checkNotNull(key);
     ComputationContextImpl ctx = new ComputationContextImpl(client);
     try {
@@ -114,13 +109,13 @@ public class ComputationWrapper implements ComputationService {
   }
 
   private static List<StreamMetadata> enrichStream(
-    Set<Tuple<String, StreamGrouping> > stream) {
+    Set<StreamTuple> streams) {
     List<StreamMetadata> smd = new ArrayList<StreamMetadata>();
 
-    for (Tuple<String, StreamGrouping> it : stream) {
+    for (StreamTuple it : streams) {
       smd.add(new StreamMetadata.Builder()
-              .setName(it.first)
-              .setGrouping(it.second)
+              .setName(it.streamName)
+              .setGrouping(it.grouping)
               .build());
     }
     return smd;

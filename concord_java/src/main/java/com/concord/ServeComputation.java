@@ -1,8 +1,3 @@
-/**
- * Serve Computation class for Concord
- * Synopsis: Serves a computation for consumption in concord
- */
-
 package com.concord;
 
 import com.concord.Computation;
