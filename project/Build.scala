@@ -19,7 +19,6 @@ object ConcordJvmBuild extends Build {
   lazy val root = (project in file("."))
     .aggregate(
       rawapi,
-      concord_scala,
       concord_java
   )
 }
