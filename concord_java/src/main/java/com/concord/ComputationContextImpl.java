@@ -31,7 +31,9 @@ public class ComputationContextImpl extends ComputationContext {
     return timers;
   }
 
-  public void produceRecord(byte[] streamName, byte[] binaryKey, byte[] binaryData) {
+  public void produceRecord(byte[] streamName,
+                            byte[] binaryKey,
+                            byte[] binaryData) {
     Preconditions.checkNotNull(streamName);
     Preconditions.checkNotNull(binaryKey);
     Preconditions.checkNotNull(binaryData);
