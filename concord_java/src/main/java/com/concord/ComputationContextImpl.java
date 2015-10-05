@@ -57,12 +57,13 @@ public class ComputationContextImpl extends ComputationContext {
   }
 
   public byte[] getState(final String key) {
+    byte[] ret;
     try {
-      byte[] ret = client.getState(key);
-      Verify.verify(ret != null, "Returned state, must always be a valid");
-      return ret;
+      ret = client.getState(key);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    Verify.verify(ret != null, "Returned state, must always be a valid");
+    return ret;
   }
 }
