@@ -30,10 +30,8 @@ public abstract class Computation {
    * @param key: The name of the timer.
    * @param time: The time (in ms) for which teh callback was scheduled.
    */
-  public abstract void processTimer(ComputationContext ctx,
-                                    String key,
+  public abstract void processTimer(ComputationContext ctx, String key,
                                     long time);
-
 
   /**
    * This function is called by the concord proxy to identify the user

@@ -23,7 +23,7 @@ public class ComputationWrapper implements ComputationService {
   /** ip and port of proxy */
   private final Endpoint proxyInfo;
 
-  public ComputationWrapper(Computation c, Endpoint proxyInfo) {
+  public ComputationWrapper(final Computation c, final Endpoint proxyInfo) {
     Preconditions.checkNotNull(c);
     Preconditions.checkNotNull(proxyInfo);
     this.userService = c;
@@ -32,17 +32,32 @@ public class ComputationWrapper implements ComputationService {
     BoltProxyService client = null;
     try {
       FramedClientConnector connector = new FramedClientConnector(
-        HostAndPort.fromParts(proxyInfo.getIp(), proxyInfo.getPort()));
+          HostAndPort.fromParts(proxyInfo.getIp(), proxyInfo.getPort()));
       client = new ThriftClientManager()
-        .createClient(connector, BoltProxyService.class)
-        .get();
-      client.registerWithScheduler(this.boltMetadata());
+                   .createClient(connector, BoltProxyService.class)
+                   .get();
     } catch (Throwable t) {
       System.err.println("Exception building thrift service: " + t);
       System.exit(1);
     }
     Preconditions.checkNotNull(client);
     this.client = client;
+    // launch and sleep in thread
+    final ComputationMetadata meta = this.boltMetadata();
+    final BoltProxyService cli = this.client;
+    (new Thread() {
+      public void run() {
+        try {
+          // Need to delay the registration with the scheduler
+          // because the JVM takes too long to spin up a thrift service
+          Thread.sleep(1000);
+          cli.registerWithScheduler(meta);
+        } catch (Throwable t) {
+          System.err.println("Error registering w/ scheduler: " + t);
+          System.exit(1);
+        }
+      }
+    }).start();
   }
 
   public ComputationTx init() {
@@ -54,9 +69,9 @@ public class ComputationWrapper implements ComputationService {
       System.exit(1);
     }
     return new ComputationTx.Builder()
-      .setRecords(ctx.getRecords())
-      .setTimers(ctx.getTimers())
-      .build();
+        .setRecords(ctx.getRecords())
+        .setTimers(ctx.getTimers())
+        .build();
   }
 
   public ComputationTx boltProcessTimer(String key, long time) {
@@ -69,9 +84,9 @@ public class ComputationWrapper implements ComputationService {
       System.exit(1);
     }
     return new ComputationTx.Builder()
-      .setRecords(ctx.getRecords())
-      .setTimers(ctx.getTimers())
-      .build();
+        .setRecords(ctx.getRecords())
+        .setTimers(ctx.getTimers())
+        .build();
   }
 
   public List<ComputationTx> boltProcessRecords(List<Record> records) {
@@ -81,9 +96,9 @@ public class ComputationWrapper implements ComputationService {
         ComputationContextImpl ctx = new ComputationContextImpl(client);
         this.userService.processRecord(ctx, r);
         ctxs.add(new ComputationTx.Builder()
-                 .setRecords(ctx.getRecords())
-                 .setTimers(ctx.getTimers())
-                 .build());
+                     .setRecords(ctx.getRecords())
+                     .setTimers(ctx.getTimers())
+                     .build());
       }
     } catch (Throwable t) {
       System.err.println("Exception in client processTimer: " + t);
@@ -96,11 +111,11 @@ public class ComputationWrapper implements ComputationService {
     try {
       Metadata metadata = this.userService.metadata();
       return new ComputationMetadata.Builder()
-        .setName(metadata.name)
-        .setIstreams(enrichStream(metadata.istreams))
-        .setOstreams(new ArrayList<String>(metadata.ostreams))
-        .setProxyEndpoint(this.proxyInfo)
-        .build();
+          .setName(metadata.name)
+          .setIstreams(enrichStream(metadata.istreams))
+          .setOstreams(new ArrayList<String>(metadata.ostreams))
+          .setProxyEndpoint(this.proxyInfo)
+          .build();
     } catch (Throwable t) {
       System.err.println("Exception generating metadata: " + t);
       System.exit(1);
@@ -109,19 +124,17 @@ public class ComputationWrapper implements ComputationService {
     return null;
   }
 
-  private static List<StreamMetadata> enrichStream(
-    Set<StreamTuple> streams) {
+  private static List<StreamMetadata> enrichStream(Set<StreamTuple> streams) {
     List<StreamMetadata> smd = new ArrayList<StreamMetadata>();
 
     for (StreamTuple it : streams) {
       smd.add(new StreamMetadata.Builder()
-              .setName(it.streamName)
-              .setGrouping(it.grouping)
-              .build());
+                  .setName(it.streamName)
+                  .setGrouping(it.grouping)
+                  .build());
     }
     return smd;
   }
 
   public void close() {}
-
 }

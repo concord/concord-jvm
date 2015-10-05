@@ -8,7 +8,7 @@ public abstract class ComputationContext {
    * @param: key:         Key to set in local store.
    * @param: binaryValue: Value to store at key.
    */
-  public abstract void setState(String key, byte[] binaryValue);
+  public abstract void setState(final String key, final byte[] binaryValue);
 
   /**
    * Get local state for a given key
@@ -16,7 +16,7 @@ public abstract class ComputationContext {
    * @param key: Key to recrieve from local store.
    * @returns the state executed upon data retrieval.
    */
-  public abstract byte[] getState(String key);
+  public abstract byte[] getState(final String key);
 
   /**
    * Register a timer callback for some point in the future
@@ -25,7 +25,7 @@ public abstract class ComputationContext {
    * @param time: The (ms since epoch) at which the callback should
    *              be fired
    */
-  public abstract void setTimer(String key, long time);
+  public abstract void setTimer(final String key, final long time);
 
   /**
    * Emit a record downstream
@@ -36,8 +36,7 @@ public abstract class ComputationContext {
    *                    when routing method is `GROUP_BY`.
    * @param binaryData: The binary blob to send downstream.
    */
-  public abstract void produceRecord(byte[] streamName,
-                                     byte[] binaryKey,
-                                     byte[] binaryData);
-
+  public abstract void produceRecord(final byte[] streamName,
+                                     final byte[] binaryKey,
+                                     final byte[] binaryData);
 }

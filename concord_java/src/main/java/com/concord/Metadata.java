@@ -15,8 +15,7 @@ public class Metadata {
   /** List of streams this computation may produce on */
   public final Set<String> ostreams;
 
-  public Metadata(String name,
-                  Set<StreamTuple> istreams,
+  public Metadata(String name, Set<StreamTuple> istreams,
                   Set<String> ostreams) {
     Preconditions.checkNotNull(name);
     Preconditions.checkNotNull(istreams);

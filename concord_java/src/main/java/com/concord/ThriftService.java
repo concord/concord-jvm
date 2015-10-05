@@ -17,26 +17,20 @@ public class ThriftService {
     Preconditions.checkNotNull(listen);
     Preconditions.checkNotNull(proxy);
     ThriftServiceProcessor processor = new ThriftServiceProcessor(
-      new ThriftCodecManager(),
-      new ArrayList<ThriftEventHandler>(),
-      new ComputationWrapper(c, proxy)
-    );
+        new ThriftCodecManager(), new ArrayList<ThriftEventHandler>(),
+        new ComputationWrapper(c, proxy));
 
     ThriftServerConfig serverConfig = new ThriftServerConfig()
-      .setBindAddress(listen.getIp())
-      .setPort(listen.getPort());
+                                          .setBindAddress(listen.getIp())
+                                          .setPort(listen.getPort());
     try {
-       this.server = new ThriftServer(processor, serverConfig);
-    }catch(Exception e){
-      System.err.println("Error creating thrift service: " + e);
+      this.server = new ThriftServer(processor, serverConfig);
+    } catch (Throwable t) {
+      System.err.println("Error creating thrift service: " + t);
       System.exit(1);
     }
   }
 
-  public void serve() {
-    this.server.start();
-  }
-  public void stop() {
-    this.server.close();
-  }
+  public void serve() { this.server.start(); }
+  public void stop() { this.server.close(); }
 }
