@@ -37,8 +37,9 @@ public class ComputationWrapper implements ComputationService {
         .createClient(connector, BoltProxyService.class)
         .get();
       client.registerWithScheduler(this.boltMetadata());
-    } catch (Exception e) {
-      throw new RuntimeException(e);
+    } catch (Throwable t) {
+      System.err.println("Exception building thrift service: " + t);
+      System.exit(1);
     }
     Preconditions.checkNotNull(client);
     this.client = client;
@@ -48,8 +49,8 @@ public class ComputationWrapper implements ComputationService {
     ComputationContextImpl ctx = new ComputationContextImpl(this.client);
     try {
       this.userService.init(ctx);
-    } catch (Exception e) {
-      System.err.println("Exception in client init: " + e);
+    } catch (Throwable t) {
+      System.err.println("Exception in client init: " + t);
       System.exit(1);
     }
     return new ComputationTx.Builder()
@@ -63,8 +64,8 @@ public class ComputationWrapper implements ComputationService {
     ComputationContextImpl ctx = new ComputationContextImpl(client);
     try {
       this.userService.processTimer(ctx, key, time);
-    } catch (Exception e) {
-      System.err.println("Exception in client processTimer: " + e);
+    } catch (Throwable t) {
+      System.err.println("Exception in client processTimer: " + t);
       System.exit(1);
     }
     return new ComputationTx.Builder()
@@ -84,8 +85,8 @@ public class ComputationWrapper implements ComputationService {
                  .setTimers(ctx.getTimers())
                  .build());
       }
-    } catch (Exception e) {
-      System.err.println("Exception in client processTimer: " + e);
+    } catch (Throwable t) {
+      System.err.println("Exception in client processTimer: " + t);
       System.exit(1);
     }
     return ctxs;
@@ -100,8 +101,8 @@ public class ComputationWrapper implements ComputationService {
         .setOstreams(new ArrayList<String>(metadata.ostreams))
         .setProxyEndpoint(this.proxyInfo)
         .build();
-    } catch (Exception e) {
-      System.err.println("Exception generating metadata: " + e);
+    } catch (Throwable t) {
+      System.err.println("Exception generating metadata: " + t);
       System.exit(1);
     }
     // compiler happy
