@@ -1,11 +1,9 @@
 #! /bin/bash --login
-dir=$(dir)
-echo "Directory: $dir"
-path=()
-for f in $(find $dir -iname "*.jar"); do
-    path+=($f)
-done
-
-foo=$(IFS=: ; echo "${path[*]}")
-echo "Hello world: $foo"
-# exec java -jar getting-started-java-assembly-1.0.jar
+dir=$(pwd)
+jar_file=$(find $dir -iname "getting_started-assembly-*.jar");
+if [[ ! -f $jar_file ]]; then
+    echo "Cannot find getting_started assembly file";
+    exit 1
+fi
+echo "Found java executable at: $jar_file"
+exec java -cp $jar_file $@
