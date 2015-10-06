@@ -6,6 +6,7 @@ import com.concord.swift.Endpoint;
 import com.concord.swift.Constants;
 import com.google.common.base.Verify;
 import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.UncaughtExceptionHandlers;
 import java.util.*;
 
 /**
@@ -28,8 +29,21 @@ public class ServeComputation {
         .build();
   }
 
+  /**
+   * 2 Very important things with this method:
+   *    1. It will exit(1) on uncaught exceptions.
+   *    2. Sets the same strategy on the class Thread.
+   *
+   * It also is a very handy method for serving your computation.
+   */
   public static void serve(Computation c) {
     Preconditions.checkNotNull(c);
+    // The guava exception handlers will exit on a Throwable
+    // not caught, we don't have to catch Throwable's at the api
+    Thread.currentThread().setUncaughtExceptionHandler(
+        UncaughtExceptionHandlers.systemExit());
+    Thread.setDefaultUncaughtExceptionHandler(
+        UncaughtExceptionHandlers.systemExit());
     Endpoint listen = addrStringToEndpoint(
         System.getenv(Constants.kConcordEnvKeyClientListenAddr));
     Endpoint proxy = addrStringToEndpoint(

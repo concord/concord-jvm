@@ -10,6 +10,8 @@ import com.google.common.net.HostAndPort;
 import org.apache.thrift.TException;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Verify;
+import com.google.common.base.Throwables;
+import com.google.common.util.concurrent.UncaughtExceptionHandlers;
 import java.util.*;
 
 public class ComputationWrapper implements ComputationService {
@@ -36,37 +38,21 @@ public class ComputationWrapper implements ComputationService {
       client = new ThriftClientManager()
                    .createClient(connector, BoltProxyService.class)
                    .get();
-    } catch (Throwable t) {
-      System.err.println("Exception building thrift service: " + t);
-      System.exit(1);
+      final ComputationMetadata meta = this.boltMetadata();
+      client.registerWithScheduler(meta);
+    } catch (Exception e) {
+      throw Throwables.propagate(e);
     }
     Preconditions.checkNotNull(client);
     this.client = client;
-    // launch and sleep in thread
-    final ComputationMetadata meta = this.boltMetadata();
-    final BoltProxyService cli = this.client;
-    (new Thread() {
-      public void run() {
-        try {
-          // Need to delay the registration with the scheduler
-          // because the JVM takes too long to spin up a thrift service
-          Thread.sleep(1000);
-          cli.registerWithScheduler(meta);
-        } catch (Throwable t) {
-          System.err.println("Error registering w/ scheduler: " + t);
-          System.exit(1);
-        }
-      }
-    }).start();
   }
 
   public ComputationTx init() {
     ComputationContextImpl ctx = new ComputationContextImpl(this.client);
     try {
       this.userService.init(ctx);
-    } catch (Throwable t) {
-      System.err.println("Exception in client init: " + t);
-      System.exit(1);
+    } catch (Exception e) {
+      throw Throwables.propagate(e);
     }
     return new ComputationTx.Builder()
         .setRecords(ctx.getRecords())
@@ -79,9 +65,8 @@ public class ComputationWrapper implements ComputationService {
     ComputationContextImpl ctx = new ComputationContextImpl(client);
     try {
       this.userService.processTimer(ctx, key, time);
-    } catch (Throwable t) {
-      System.err.println("Exception in client processTimer: " + t);
-      System.exit(1);
+    } catch (Exception e) {
+      throw Throwables.propagate(e);
     }
     return new ComputationTx.Builder()
         .setRecords(ctx.getRecords())
@@ -100,9 +85,8 @@ public class ComputationWrapper implements ComputationService {
                      .setTimers(ctx.getTimers())
                      .build());
       }
-    } catch (Throwable t) {
-      System.err.println("Exception in client processTimer: " + t);
-      System.exit(1);
+    } catch (Exception e) {
+      throw Throwables.propagate(e);
     }
     return ctxs;
   }
@@ -116,12 +100,9 @@ public class ComputationWrapper implements ComputationService {
           .setOstreams(new ArrayList<String>(metadata.ostreams))
           .setProxyEndpoint(this.proxyInfo)
           .build();
-    } catch (Throwable t) {
-      System.err.println("Exception generating metadata: " + t);
-      System.exit(1);
+    } catch (Exception e) {
+      throw Throwables.propagate(e);
     }
-    // compiler happy
-    return null;
   }
 
   private static List<StreamMetadata> enrichStream(Set<StreamTuple> streams) {
