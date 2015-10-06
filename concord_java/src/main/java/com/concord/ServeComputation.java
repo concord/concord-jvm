@@ -30,9 +30,9 @@ public class ServeComputation {
   }
 
   /**
-   * 2 Very important things with this method:
+   * 2 Very important things users would care when using this method:
    *    1. It will exit(1) on uncaught exceptions.
-   *    2. Sets the same strategy on the class Thread.
+   *    2. Sets the same strategy on the class Thread for all threads.
    *
    * It also is a very handy method for serving your computation.
    */
