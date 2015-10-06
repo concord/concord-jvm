@@ -32,9 +32,10 @@ public class ComputationWrapper implements ComputationService {
     this.proxyInfo = proxyInfo;
 
     BoltProxyService client = null;
+    FramedClientConnector connector = new FramedClientConnector(
+        HostAndPort.fromParts(proxyInfo.getIp(), proxyInfo.getPort()));
+
     try {
-      FramedClientConnector connector = new FramedClientConnector(
-          HostAndPort.fromParts(proxyInfo.getIp(), proxyInfo.getPort()));
       client = new ThriftClientManager()
                    .createClient(connector, BoltProxyService.class)
                    .get();
@@ -43,17 +44,14 @@ public class ComputationWrapper implements ComputationService {
     } catch (Exception e) {
       throw Throwables.propagate(e);
     }
+
     Preconditions.checkNotNull(client);
     this.client = client;
   }
 
   public ComputationTx init() {
     ComputationContextImpl ctx = new ComputationContextImpl(this.client);
-    try {
-      this.userService.init(ctx);
-    } catch (Exception e) {
-      throw Throwables.propagate(e);
-    }
+    this.userService.init(ctx);
     return new ComputationTx.Builder()
         .setRecords(ctx.getRecords())
         .setTimers(ctx.getTimers())
@@ -63,11 +61,7 @@ public class ComputationWrapper implements ComputationService {
   public ComputationTx boltProcessTimer(String key, long time) {
     Preconditions.checkNotNull(key);
     ComputationContextImpl ctx = new ComputationContextImpl(client);
-    try {
-      this.userService.processTimer(ctx, key, time);
-    } catch (Exception e) {
-      throw Throwables.propagate(e);
-    }
+    this.userService.processTimer(ctx, key, time);
     return new ComputationTx.Builder()
         .setRecords(ctx.getRecords())
         .setTimers(ctx.getTimers())
@@ -76,33 +70,25 @@ public class ComputationWrapper implements ComputationService {
 
   public List<ComputationTx> boltProcessRecords(List<Record> records) {
     List<ComputationTx> ctxs = new ArrayList<ComputationTx>();
-    try {
-      for (Record r : records) {
-        ComputationContextImpl ctx = new ComputationContextImpl(client);
-        this.userService.processRecord(ctx, r);
-        ctxs.add(new ComputationTx.Builder()
-                     .setRecords(ctx.getRecords())
-                     .setTimers(ctx.getTimers())
-                     .build());
-      }
-    } catch (Exception e) {
-      throw Throwables.propagate(e);
+    for (Record r : records) {
+      ComputationContextImpl ctx = new ComputationContextImpl(client);
+      this.userService.processRecord(ctx, r);
+      ctxs.add(new ComputationTx.Builder()
+                   .setRecords(ctx.getRecords())
+                   .setTimers(ctx.getTimers())
+                   .build());
     }
     return ctxs;
   }
 
   public ComputationMetadata boltMetadata() {
-    try {
-      Metadata metadata = this.userService.metadata();
-      return new ComputationMetadata.Builder()
-          .setName(metadata.name)
-          .setIstreams(enrichStream(metadata.istreams))
-          .setOstreams(new ArrayList<String>(metadata.ostreams))
-          .setProxyEndpoint(this.proxyInfo)
-          .build();
-    } catch (Exception e) {
-      throw Throwables.propagate(e);
-    }
+    Metadata metadata = this.userService.metadata();
+    return new ComputationMetadata.Builder()
+        .setName(metadata.name)
+        .setIstreams(enrichStream(metadata.istreams))
+        .setOstreams(new ArrayList<String>(metadata.ostreams))
+        .setProxyEndpoint(this.proxyInfo)
+        .build();
   }
 
   private static List<StreamMetadata> enrichStream(Set<StreamTuple> streams) {

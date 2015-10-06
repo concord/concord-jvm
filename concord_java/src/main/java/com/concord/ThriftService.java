@@ -23,12 +23,7 @@ public class ThriftService {
     ThriftServerConfig serverConfig = new ThriftServerConfig()
                                           .setBindAddress(listen.getIp())
                                           .setPort(listen.getPort());
-    try {
-      this.server = new ThriftServer(processor, serverConfig);
-    } catch (Throwable t) {
-      System.err.println("Error creating thrift service: " + t);
-      System.exit(1);
-    }
+    this.server = new ThriftServer(processor, serverConfig);
   }
 
   public void serve() { this.server.start(); }
