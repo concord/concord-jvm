@@ -9,6 +9,7 @@ import com.concord.swift.BoltError;
 import org.apache.thrift.TException;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Verify;
+import com.google.common.base.Throwables;
 import java.util.*;
 
 public class ComputationContextImpl extends ComputationContext {
@@ -52,7 +53,7 @@ public class ComputationContextImpl extends ComputationContext {
     try {
       client.setState(key, binaryValue);
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      throw Throwables.propagate(e);
     }
   }
 
@@ -61,7 +62,7 @@ public class ComputationContextImpl extends ComputationContext {
     try {
       ret = client.getState(key);
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      throw Throwables.propagate(e);
     }
     Verify.verify(ret != null, "Returned state, must always be a valid");
     return ret;
