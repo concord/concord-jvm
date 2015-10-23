@@ -9,8 +9,8 @@ object ConcordJvmBuild extends Build {
     scalaVersion := "2.11.6",
     organization := "io.concord",
     libraryDependencies ++= Seq(
-      "com.facebook.swift" % "swift-service" % "0.14.1",
-      "com.facebook.swift" % "swift-codec" % "0.14.1"
+      "com.facebook.swift" % "swift-service" % "0.15.1",
+      "com.facebook.swift" % "swift-codec" % "0.15.1"
     ),
     autoScalaLibrary := false,
     crossPaths := false
