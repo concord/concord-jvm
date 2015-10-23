@@ -12,7 +12,7 @@ public final class Endpoint
     @ThriftConstructor
     public Endpoint(
         @ThriftField(value=1, name="ip", requiredness=Requiredness.NONE) final String ip,
-        @ThriftField(value=2, name="port", requiredness=Requiredness.NONE) final short port
+        @ThriftField(value=2, name="port", requiredness=Requiredness.NONE) final int port
     ) {
         this.ip = ip;
         this.port = port;
@@ -25,9 +25,9 @@ public final class Endpoint
             this.ip = ip;
             return this;
         }
-        private short port;
+        private int port;
 
-        public Builder setPort(short port) {
+        public Builder setPort(int port) {
             this.port = port;
             return this;
         }
@@ -51,10 +51,10 @@ public final class Endpoint
     @ThriftField(value=1, name="ip", requiredness=Requiredness.NONE)
     public String getIp() { return ip; }
 
-    private final short port;
+    private final int port;
 
     @ThriftField(value=2, name="port", requiredness=Requiredness.NONE)
-    public short getPort() { return port; }
+    public int getPort() { return port; }
 
     @Override
     public String toString()

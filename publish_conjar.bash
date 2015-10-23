@@ -8,6 +8,8 @@ git_root=$(git rev-parse --show-toplevel)
 work_dir=$(mktemp -d)
 
 cd $git_root
+rm -rf concord_java/target
+rm -rf rawapi/target
 sbt package make-pom
 
 cd $work_dir
@@ -16,8 +18,6 @@ for f in $(find $git_root -iname "*.jar" -o -iname "*.pom"); do
     cp $f $work_dir
 done
 rm root*
-rm *sources.jar
-rm *javadoc.jar
 ls ./*.jar
 for f in $(ls ./*.jar); do
     # must contain matching .pom file

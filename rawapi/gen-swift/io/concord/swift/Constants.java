@@ -15,8 +15,6 @@ public final class Constants
 
     public static final String kBoltEnvKeyPathPrefix = "BOLT";
 
-    public static final String kBoltTraceHeader = "bolt_traces";
-
     public static final String kConcordEnvKeyClientListenAddr = "CONCORD_client_listen_address";
 
     public static final String kConcordEnvKeyClientProxyAddr = "CONCORD_client_proxy_address";

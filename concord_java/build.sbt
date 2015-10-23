@@ -1,6 +1,6 @@
 name := "concord"
 
-version := "0.1.0"
+version := "0.1.1"
 
 libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-simple" % "1.7.7",
