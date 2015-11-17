@@ -17,13 +17,12 @@ public final class ExecutorTaskInfoHelper
         @ThriftField(value=4, name="scheduler", requiredness=Requiredness.NONE) final Endpoint scheduler,
         @ThriftField(value=5, name="proxy", requiredness=Requiredness.NONE) final Endpoint proxy,
         @ThriftField(value=6, name="client", requiredness=Requiredness.NONE) final Endpoint client,
-        @ThriftField(value=7, name="traceAggregator", requiredness=Requiredness.NONE) final Endpoint traceAggregator,
-        @ThriftField(value=8, name="execName", requiredness=Requiredness.NONE) final String execName,
-        @ThriftField(value=9, name="folder", requiredness=Requiredness.NONE) final String folder,
-        @ThriftField(value=10, name="computationAliasName", requiredness=Requiredness.NONE) final String computationAliasName,
-        @ThriftField(value=11, name="clientArguments", requiredness=Requiredness.NONE) final List<String> clientArguments,
-        @ThriftField(value=12, name="environmentExtra", requiredness=Requiredness.NONE) final List<String> environmentExtra,
-        @ThriftField(value=13, name="dockerContainer", requiredness=Requiredness.NONE) final String dockerContainer
+        @ThriftField(value=7, name="execName", requiredness=Requiredness.NONE) final String execName,
+        @ThriftField(value=8, name="folder", requiredness=Requiredness.NONE) final String folder,
+        @ThriftField(value=9, name="computationAliasName", requiredness=Requiredness.NONE) final String computationAliasName,
+        @ThriftField(value=10, name="clientArguments", requiredness=Requiredness.NONE) final List<String> clientArguments,
+        @ThriftField(value=11, name="environmentExtra", requiredness=Requiredness.NONE) final List<String> environmentExtra,
+        @ThriftField(value=12, name="dockerContainer", requiredness=Requiredness.NONE) final String dockerContainer
     ) {
         this.frameworkLoggingLevel = frameworkLoggingLevel;
         this.user = user;
@@ -31,7 +30,6 @@ public final class ExecutorTaskInfoHelper
         this.scheduler = scheduler;
         this.proxy = proxy;
         this.client = client;
-        this.traceAggregator = traceAggregator;
         this.execName = execName;
         this.folder = folder;
         this.computationAliasName = computationAliasName;
@@ -75,12 +73,6 @@ public final class ExecutorTaskInfoHelper
 
         public Builder setClient(Endpoint client) {
             this.client = client;
-            return this;
-        }
-        private Endpoint traceAggregator;
-
-        public Builder setTraceAggregator(Endpoint traceAggregator) {
-            this.traceAggregator = traceAggregator;
             return this;
         }
         private String execName;
@@ -128,7 +120,6 @@ public final class ExecutorTaskInfoHelper
             this.scheduler = other.scheduler;
             this.proxy = other.proxy;
             this.client = other.client;
-            this.traceAggregator = other.traceAggregator;
             this.execName = other.execName;
             this.folder = other.folder;
             this.computationAliasName = other.computationAliasName;
@@ -145,7 +136,6 @@ public final class ExecutorTaskInfoHelper
                 this.scheduler,
                 this.proxy,
                 this.client,
-                this.traceAggregator,
                 this.execName,
                 this.folder,
                 this.computationAliasName,
@@ -186,39 +176,34 @@ public final class ExecutorTaskInfoHelper
     @ThriftField(value=6, name="client", requiredness=Requiredness.NONE)
     public Endpoint getClient() { return client; }
 
-    private final Endpoint traceAggregator;
-
-    @ThriftField(value=7, name="traceAggregator", requiredness=Requiredness.NONE)
-    public Endpoint getTraceAggregator() { return traceAggregator; }
-
     private final String execName;
 
-    @ThriftField(value=8, name="execName", requiredness=Requiredness.NONE)
+    @ThriftField(value=7, name="execName", requiredness=Requiredness.NONE)
     public String getExecName() { return execName; }
 
     private final String folder;
 
-    @ThriftField(value=9, name="folder", requiredness=Requiredness.NONE)
+    @ThriftField(value=8, name="folder", requiredness=Requiredness.NONE)
     public String getFolder() { return folder; }
 
     private final String computationAliasName;
 
-    @ThriftField(value=10, name="computationAliasName", requiredness=Requiredness.NONE)
+    @ThriftField(value=9, name="computationAliasName", requiredness=Requiredness.NONE)
     public String getComputationAliasName() { return computationAliasName; }
 
     private final List<String> clientArguments;
 
-    @ThriftField(value=11, name="clientArguments", requiredness=Requiredness.NONE)
+    @ThriftField(value=10, name="clientArguments", requiredness=Requiredness.NONE)
     public List<String> getClientArguments() { return clientArguments; }
 
     private final List<String> environmentExtra;
 
-    @ThriftField(value=12, name="environmentExtra", requiredness=Requiredness.NONE)
+    @ThriftField(value=11, name="environmentExtra", requiredness=Requiredness.NONE)
     public List<String> getEnvironmentExtra() { return environmentExtra; }
 
     private final String dockerContainer;
 
-    @ThriftField(value=13, name="dockerContainer", requiredness=Requiredness.NONE)
+    @ThriftField(value=12, name="dockerContainer", requiredness=Requiredness.NONE)
     public String getDockerContainer() { return dockerContainer; }
 
     @Override
@@ -231,7 +216,6 @@ public final class ExecutorTaskInfoHelper
             .add("scheduler", scheduler)
             .add("proxy", proxy)
             .add("client", client)
-            .add("traceAggregator", traceAggregator)
             .add("execName", execName)
             .add("folder", folder)
             .add("computationAliasName", computationAliasName)

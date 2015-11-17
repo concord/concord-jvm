@@ -13,11 +13,13 @@ public final class TopologyMetadata
     public TopologyMetadata(
         @ThriftField(value=1, name="version", requiredness=Requiredness.NONE) final int version,
         @ThriftField(value=2, name="computations", requiredness=Requiredness.NONE) final Map<String, PhysicalComputationLayout> computations,
-        @ThriftField(value=3, name="frameworkID", requiredness=Requiredness.NONE) final String frameworkID
+        @ThriftField(value=3, name="frameworkID", requiredness=Requiredness.NONE) final String frameworkID,
+        @ThriftField(value=4, name="kafkaBrokerList", requiredness=Requiredness.NONE) final String kafkaBrokerList
     ) {
         this.version = version;
         this.computations = computations;
         this.frameworkID = frameworkID;
+        this.kafkaBrokerList = kafkaBrokerList;
     }
 
     public static class Builder {
@@ -39,19 +41,27 @@ public final class TopologyMetadata
             this.frameworkID = frameworkID;
             return this;
         }
+        private String kafkaBrokerList;
+
+        public Builder setKafkaBrokerList(String kafkaBrokerList) {
+            this.kafkaBrokerList = kafkaBrokerList;
+            return this;
+        }
 
         public Builder() { }
         public Builder(TopologyMetadata other) {
             this.version = other.version;
             this.computations = other.computations;
             this.frameworkID = other.frameworkID;
+            this.kafkaBrokerList = other.kafkaBrokerList;
         }
 
         public TopologyMetadata build() {
             return new TopologyMetadata (
                 this.version,
                 this.computations,
-                this.frameworkID
+                this.frameworkID,
+                this.kafkaBrokerList
             );
         }
     }
@@ -71,6 +81,11 @@ public final class TopologyMetadata
     @ThriftField(value=3, name="frameworkID", requiredness=Requiredness.NONE)
     public String getFrameworkID() { return frameworkID; }
 
+    private final String kafkaBrokerList;
+
+    @ThriftField(value=4, name="kafkaBrokerList", requiredness=Requiredness.NONE)
+    public String getKafkaBrokerList() { return kafkaBrokerList; }
+
     @Override
     public String toString()
     {
@@ -78,6 +93,7 @@ public final class TopologyMetadata
             .add("version", version)
             .add("computations", computations)
             .add("frameworkID", frameworkID)
+            .add("kafkaBrokerList", kafkaBrokerList)
             .toString();
     }
 }
