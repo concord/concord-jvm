@@ -1,7 +1,7 @@
-package com.concord;
+package io.concord;
 
-import com.concord.StreamTuple;
-import com.concord.swift.StreamGrouping;
+import io.concord.StreamTuple;
+import io.concord.swift.StreamGrouping;
 import java.util.Set;
 import com.google.common.base.Preconditions;
 

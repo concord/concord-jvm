@@ -1,7 +1,8 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
+import com.facebook.swift.codec.ThriftField.Recursiveness;
 import java.util.*;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -95,5 +96,33 @@ public final class PhysicalComputationLayout
             .add("ostreams", ostreams)
             .add("nodes", nodes)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        PhysicalComputationLayout other = (PhysicalComputationLayout)o;
+
+        return
+            Objects.equals(name, other.name) &&
+            Objects.equals(istreams, other.istreams) &&
+            Objects.equals(ostreams, other.ostreams) &&
+            Objects.equals(nodes, other.nodes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(new Object[] {
+            name,
+            istreams,
+            ostreams,
+            nodes
+        });
     }
 }

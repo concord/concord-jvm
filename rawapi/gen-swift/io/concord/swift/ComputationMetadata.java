@@ -1,7 +1,8 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
+import com.facebook.swift.codec.ThriftField.Recursiveness;
 import java.util.*;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -111,5 +112,35 @@ public final class ComputationMetadata
             .add("ostreams", ostreams)
             .add("proxyEndpoint", proxyEndpoint)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ComputationMetadata other = (ComputationMetadata)o;
+
+        return
+            Objects.equals(name, other.name) &&
+            Objects.equals(taskId, other.taskId) &&
+            Objects.equals(istreams, other.istreams) &&
+            Objects.equals(ostreams, other.ostreams) &&
+            Objects.equals(proxyEndpoint, other.proxyEndpoint);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(new Object[] {
+            name,
+            taskId,
+            istreams,
+            ostreams,
+            proxyEndpoint
+        });
     }
 }

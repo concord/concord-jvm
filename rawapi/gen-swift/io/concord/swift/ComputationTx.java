@@ -1,7 +1,8 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
+import com.facebook.swift.codec.ThriftField.Recursiveness;
 import java.util.*;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -79,5 +80,31 @@ public final class ComputationTx
             .add("records", records)
             .add("timers", timers)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ComputationTx other = (ComputationTx)o;
+
+        return
+            Objects.equals(id, other.id) &&
+            Objects.equals(records, other.records) &&
+            Objects.equals(timers, other.timers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(new Object[] {
+            id,
+            records,
+            timers
+        });
     }
 }

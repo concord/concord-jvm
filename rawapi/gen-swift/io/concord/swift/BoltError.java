@@ -1,7 +1,8 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
+import com.facebook.swift.codec.ThriftField.Recursiveness;
 import java.util.*;
 
 @ThriftStruct("BoltError")

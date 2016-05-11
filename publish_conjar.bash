@@ -1,35 +1,35 @@
 #!/bin/bash --login
 
-#set -ex
 set -e
 
-current=$(pwd)
-git_root=$(git rev-parse --show-toplevel)
-work_dir=$(mktemp -d)
+ROOT=$(git rev-parse --show-toplevel)
+PROJ_ROOT=$ROOT/client/jvm
+CURRENT=$(pwd)
+WORK_DIR=$(mktemp -d)
 
-cd $git_root
-rm -rf concord_java/target
-rm -rf rawapi/target
+# Clean up, then package and create pom's
+rm -rf $PROJ_ROOT/concord_java/target
+rm -rf $PROJ_ROOT/concord_kafka_consumer/target
+rm -rf $PROJ_ROOT/rawapi/target
+cd $PROJ_ROOT
 sbt package make-pom
 
-cd $work_dir
-echo "Working directory: $work_dir"
-for f in $(find $git_root -iname "*.jar" -o -iname "*.pom"); do
-    cp $f $work_dir
-done
-rm root*
-ls ./*.jar
-for f in $(ls ./*.jar); do
-    # must contain matching .pom file
-    filename=$(basename "$f")
-    pomxml="${filename%.*}.pom"
-    echo $pomxml
-    if [ ! -f $pomxml ]; then
+# Copy all jars and pom (that don't start with root*) to work dir
+find $PROJ_ROOT \( -iname "*.jar" -o -iname "*.pom" \) \
+     -a ! -iname "root*" | xargs cp -t $WORK_DIR
+
+# Iterate over each jar-pom tuple and send to conjars
+echo $WORK_DIR
+for f in $(ls $WORK_DIR/*.jar); do
+    NAME=$(basename "$f")
+    POM="${NAME%.*}.pom"
+    if [ ! -f $WORK_DIR/$POM ]; then
         echo "Error: Matching .pom file does not exist for $f"
         exit 1
     fi
-    echo "Sending $pomxml with $f to repo@conjars.org"
-    scp $pomxml $f repo@conjars.org:
+    echo "Sending $POM with $f to repo@conjars.org"
+    scp $WORK_DIR/$POM $f repo@conjars.org:
 done
-cd $current
-rm -r $work_dir
+
+cd $CURRENT
+rm -rf $WORK_DIR

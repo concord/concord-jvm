@@ -1,7 +1,8 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
+import com.facebook.swift.codec.ThriftField.Recursiveness;
 import java.util.*;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -111,5 +112,35 @@ public final class RecordMetadata
             .add("stream", stream)
             .add("timestamp", timestamp)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        RecordMetadata other = (RecordMetadata)o;
+
+        return
+            Objects.equals(traceId, other.traceId) &&
+            Objects.equals(sourceSpanId, other.sourceSpanId) &&
+            Objects.equals(flags, other.flags) &&
+            Objects.equals(stream, other.stream) &&
+            Objects.equals(timestamp, other.timestamp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(new Object[] {
+            traceId,
+            sourceSpanId,
+            flags,
+            stream,
+            timestamp
+        });
     }
 }

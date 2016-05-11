@@ -1,4 +1,4 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
@@ -8,10 +8,10 @@ import java.io.*;
 import java.util.*;
 
 @ThriftService("BoltProxyService")
-public interface BoltProxyService extends com.concord.swift.MutableEphemeralStateService, Closeable
+public interface BoltProxyService extends io.concord.swift.MutableEphemeralStateService, Closeable
 {
     @ThriftService("BoltProxyService")
-    public interface Async extends Closeable, com.concord.swift.MutableEphemeralStateService.Async
+    public interface Async extends Closeable, io.concord.swift.MutableEphemeralStateService.Async
     {
         void close();
 
@@ -21,14 +21,6 @@ public interface BoltProxyService extends com.concord.swift.MutableEphemeralStat
                       })
         ListenableFuture<Void> updateTopology(
             @ThriftField(value=1, name="topology", requiredness=Requiredness.NONE) final TopologyMetadata topology
-        );
-
-        @ThriftMethod(value = "dispatchRecords",
-                      exception = {
-                          @ThriftException(type=BoltError.class, id=1)
-                      })
-        ListenableFuture<Void> dispatchRecords(
-            @ThriftField(value=1, name="records", requiredness=Requiredness.NONE) final List<Record> records
         );
 
         @ThriftMethod(value = "updateSchedulerAddress",
@@ -54,14 +46,6 @@ public interface BoltProxyService extends com.concord.swift.MutableEphemeralStat
                   })
     void updateTopology(
         @ThriftField(value=1, name="topology", requiredness=Requiredness.NONE) final TopologyMetadata topology
-    ) throws BoltError, org.apache.thrift.TException;
-
-    @ThriftMethod(value = "dispatchRecords",
-                  exception = {
-                      @ThriftException(type=BoltError.class, id=1)
-                  })
-    void dispatchRecords(
-        @ThriftField(value=1, name="records", requiredness=Requiredness.NONE) final List<Record> records
     ) throws BoltError, org.apache.thrift.TException;
 
     @ThriftMethod(value = "updateSchedulerAddress",

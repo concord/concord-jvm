@@ -1,7 +1,8 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
+import com.facebook.swift.codec.ThriftField.Recursiveness;
 import java.util.*;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -63,5 +64,29 @@ public final class Endpoint
             .add("ip", ip)
             .add("port", port)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Endpoint other = (Endpoint)o;
+
+        return
+            Objects.equals(ip, other.ip) &&
+            Objects.equals(port, other.port);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(new Object[] {
+            ip,
+            port
+        });
     }
 }

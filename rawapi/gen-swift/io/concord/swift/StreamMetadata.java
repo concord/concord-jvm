@@ -1,7 +1,8 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
+import com.facebook.swift.codec.ThriftField.Recursiveness;
 import java.util.*;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -63,5 +64,29 @@ public final class StreamMetadata
             .add("name", name)
             .add("grouping", grouping)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        StreamMetadata other = (StreamMetadata)o;
+
+        return
+            Objects.equals(name, other.name) &&
+            Objects.equals(grouping, other.grouping);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(new Object[] {
+            name,
+            grouping
+        });
     }
 }

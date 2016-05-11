@@ -1,0 +1,16 @@
+{
+  "cpus": 1,
+  "zookeeper_hosts":"127.0.0.1:2181",
+  "zookeeper_path":"/concord",
+  "executable_name": "run.sh",
+  "compress_files": ["concord_kafka_consumer-assembly-0.0.3.jar", "run.sh"],
+  "computation_name": "concord-kafka-source-words",
+  "executable_arguments": [
+    "io.concord.ConcordKafkaConsumerRunner"
+  ],
+  "environment_variables": [
+    "ConcordKafkaBrokers=localhost:9092",
+    "ConcordKafkaTopic=words",
+    "ConcordKafkaFromBeginning=true"
+  ]
+}

@@ -1,7 +1,8 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
+import com.facebook.swift.codec.ThriftField.Recursiveness;
 import java.util.*;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -18,7 +19,8 @@ public final class BoltComputationRequest
         @ThriftField(value=5, name="disk", requiredness=Requiredness.NONE) final long disk,
         @ThriftField(value=6, name="taskHelper", requiredness=Requiredness.NONE) final ExecutorTaskInfoHelper taskHelper,
         @ThriftField(value=7, name="forceUpdateBinary", requiredness=Requiredness.NONE) final boolean forceUpdateBinary,
-        @ThriftField(value=8, name="slug", requiredness=Requiredness.NONE) final byte [] slug
+        @ThriftField(value=8, name="slug", requiredness=Requiredness.NONE) final byte[] slug,
+        @ThriftField(value=9, name="forcePullContainer", requiredness=Requiredness.NONE) final boolean forcePullContainer
     ) {
         this.name = name;
         this.instances = instances;
@@ -28,6 +30,7 @@ public final class BoltComputationRequest
         this.taskHelper = taskHelper;
         this.forceUpdateBinary = forceUpdateBinary;
         this.slug = slug;
+        this.forcePullContainer = forcePullContainer;
     }
 
     public static class Builder {
@@ -73,10 +76,16 @@ public final class BoltComputationRequest
             this.forceUpdateBinary = forceUpdateBinary;
             return this;
         }
-        private byte [] slug;
+        private byte[] slug;
 
-        public Builder setSlug(byte [] slug) {
+        public Builder setSlug(byte[] slug) {
             this.slug = slug;
+            return this;
+        }
+        private boolean forcePullContainer;
+
+        public Builder setForcePullContainer(boolean forcePullContainer) {
+            this.forcePullContainer = forcePullContainer;
             return this;
         }
 
@@ -90,6 +99,7 @@ public final class BoltComputationRequest
             this.taskHelper = other.taskHelper;
             this.forceUpdateBinary = other.forceUpdateBinary;
             this.slug = other.slug;
+            this.forcePullContainer = other.forcePullContainer;
         }
 
         public BoltComputationRequest build() {
@@ -101,7 +111,8 @@ public final class BoltComputationRequest
                 this.disk,
                 this.taskHelper,
                 this.forceUpdateBinary,
-                this.slug
+                this.slug,
+                this.forcePullContainer
             );
         }
     }
@@ -141,10 +152,15 @@ public final class BoltComputationRequest
     @ThriftField(value=7, name="forceUpdateBinary", requiredness=Requiredness.NONE)
     public boolean isForceUpdateBinary() { return forceUpdateBinary; }
 
-    private final byte [] slug;
+    private final byte[] slug;
 
     @ThriftField(value=8, name="slug", requiredness=Requiredness.NONE)
-    public byte [] getSlug() { return slug; }
+    public byte[] getSlug() { return slug; }
+
+    private final boolean forcePullContainer;
+
+    @ThriftField(value=9, name="forcePullContainer", requiredness=Requiredness.NONE)
+    public boolean isForcePullContainer() { return forcePullContainer; }
 
     @Override
     public String toString()
@@ -158,6 +174,45 @@ public final class BoltComputationRequest
             .add("taskHelper", taskHelper)
             .add("forceUpdateBinary", forceUpdateBinary)
             .add("slug", slug)
+            .add("forcePullContainer", forcePullContainer)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        BoltComputationRequest other = (BoltComputationRequest)o;
+
+        return
+            Objects.equals(name, other.name) &&
+            Objects.equals(instances, other.instances) &&
+            Objects.equals(cpus, other.cpus) &&
+            Objects.equals(mem, other.mem) &&
+            Objects.equals(disk, other.disk) &&
+            Objects.equals(taskHelper, other.taskHelper) &&
+            Objects.equals(forceUpdateBinary, other.forceUpdateBinary) &&
+            Arrays.equals(slug, other.slug) &&
+            Objects.equals(forcePullContainer, other.forcePullContainer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(new Object[] {
+            name,
+            instances,
+            cpus,
+            mem,
+            disk,
+            taskHelper,
+            forceUpdateBinary,
+            slug,
+            forcePullContainer
+        });
     }
 }

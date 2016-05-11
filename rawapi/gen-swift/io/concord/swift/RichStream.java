@@ -1,7 +1,8 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
+import com.facebook.swift.codec.ThriftField.Recursiveness;
 import java.util.*;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -79,5 +80,31 @@ public final class RichStream
             .add("computationName", computationName)
             .add("endpoints", endpoints)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        RichStream other = (RichStream)o;
+
+        return
+            Objects.equals(stream, other.stream) &&
+            Objects.equals(computationName, other.computationName) &&
+            Objects.equals(endpoints, other.endpoints);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(new Object[] {
+            stream,
+            computationName,
+            endpoints
+        });
     }
 }

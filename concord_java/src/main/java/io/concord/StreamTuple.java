@@ -1,6 +1,6 @@
-package com.concord;
+package io.concord;
 
-import com.concord.swift.StreamGrouping;
+import io.concord.swift.StreamGrouping;
 import com.google.common.base.Preconditions;
 
 public class StreamTuple {

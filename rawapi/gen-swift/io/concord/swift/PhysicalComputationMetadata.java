@@ -1,7 +1,8 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
+import com.facebook.swift.codec.ThriftField.Recursiveness;
 import java.util.*;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -17,7 +18,8 @@ public final class PhysicalComputationMetadata
         @ThriftField(value=4, name="mem", requiredness=Requiredness.NONE) final int mem,
         @ThriftField(value=5, name="disk", requiredness=Requiredness.NONE) final int disk,
         @ThriftField(value=6, name="taskHelper", requiredness=Requiredness.NONE) final ExecutorTaskInfoHelper taskHelper,
-        @ThriftField(value=7, name="needsReconciliation", requiredness=Requiredness.NONE) final boolean needsReconciliation
+        @ThriftField(value=7, name="needsReconciliation", requiredness=Requiredness.NONE) final boolean needsReconciliation,
+        @ThriftField(value=8, name="killed", requiredness=Requiredness.NONE) final boolean killed
     ) {
         this.taskId = taskId;
         this.slaveId = slaveId;
@@ -26,6 +28,7 @@ public final class PhysicalComputationMetadata
         this.disk = disk;
         this.taskHelper = taskHelper;
         this.needsReconciliation = needsReconciliation;
+        this.killed = killed;
     }
 
     public static class Builder {
@@ -71,6 +74,12 @@ public final class PhysicalComputationMetadata
             this.needsReconciliation = needsReconciliation;
             return this;
         }
+        private boolean killed;
+
+        public Builder setKilled(boolean killed) {
+            this.killed = killed;
+            return this;
+        }
 
         public Builder() { }
         public Builder(PhysicalComputationMetadata other) {
@@ -81,6 +90,7 @@ public final class PhysicalComputationMetadata
             this.disk = other.disk;
             this.taskHelper = other.taskHelper;
             this.needsReconciliation = other.needsReconciliation;
+            this.killed = other.killed;
         }
 
         public PhysicalComputationMetadata build() {
@@ -91,7 +101,8 @@ public final class PhysicalComputationMetadata
                 this.mem,
                 this.disk,
                 this.taskHelper,
-                this.needsReconciliation
+                this.needsReconciliation,
+                this.killed
             );
         }
     }
@@ -131,6 +142,11 @@ public final class PhysicalComputationMetadata
     @ThriftField(value=7, name="needsReconciliation", requiredness=Requiredness.NONE)
     public boolean isNeedsReconciliation() { return needsReconciliation; }
 
+    private final boolean killed;
+
+    @ThriftField(value=8, name="killed", requiredness=Requiredness.NONE)
+    public boolean isKilled() { return killed; }
+
     @Override
     public String toString()
     {
@@ -142,6 +158,43 @@ public final class PhysicalComputationMetadata
             .add("disk", disk)
             .add("taskHelper", taskHelper)
             .add("needsReconciliation", needsReconciliation)
+            .add("killed", killed)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        PhysicalComputationMetadata other = (PhysicalComputationMetadata)o;
+
+        return
+            Objects.equals(taskId, other.taskId) &&
+            Objects.equals(slaveId, other.slaveId) &&
+            Objects.equals(cpus, other.cpus) &&
+            Objects.equals(mem, other.mem) &&
+            Objects.equals(disk, other.disk) &&
+            Objects.equals(taskHelper, other.taskHelper) &&
+            Objects.equals(needsReconciliation, other.needsReconciliation) &&
+            Objects.equals(killed, other.killed);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(new Object[] {
+            taskId,
+            slaveId,
+            cpus,
+            mem,
+            disk,
+            taskHelper,
+            needsReconciliation,
+            killed
+        });
     }
 }

@@ -1,9 +1,9 @@
-package com.concord;
+package io.concord;
 
-import com.concord.Computation;
-import com.concord.ThriftService;
-import com.concord.swift.Endpoint;
-import com.concord.swift.Constants;
+import io.concord.Computation;
+import io.concord.ThriftService;
+import io.concord.swift.Endpoint;
+import io.concord.swift.Constants;
 import com.google.common.base.Verify;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.UncaughtExceptionHandlers;

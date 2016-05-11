@@ -1,6 +1,10 @@
 name := "concord"
 
-version := "0.1.1"
+version := "0.1.2"
+
+autoScalaLibrary := false
+
+crossPaths := false
 
 libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-simple" % "1.7.7",

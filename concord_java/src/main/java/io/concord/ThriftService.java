@@ -1,9 +1,9 @@
-package com.concord;
+package io.concord;
 
-import com.concord.Computation;
-import com.concord.swift.ComputationService;
-import com.concord.swift.Constants;
-import com.concord.swift.Endpoint;
+import io.concord.Computation;
+import io.concord.swift.ComputationService;
+import io.concord.swift.Constants;
+import io.concord.swift.Endpoint;
 import com.facebook.swift.service.*;
 import com.facebook.swift.codec.*;
 import com.google.common.base.Preconditions;

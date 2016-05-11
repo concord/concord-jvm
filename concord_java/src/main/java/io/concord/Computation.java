@@ -1,8 +1,8 @@
-package com.concord;
+package io.concord;
 
-import com.concord.Metadata;
-import com.concord.ComputationContext;
-import com.concord.swift.Record;
+import io.concord.Metadata;
+import io.concord.ComputationContext;
+import io.concord.swift.Record;
 
 public abstract class Computation {
 
@@ -14,6 +14,13 @@ public abstract class Computation {
    * @param ctx: The computation context object provided by the system.
    */
   public abstract void init(ComputationContext ctx);
+
+  /**
+   * Called when the framework is ready to shutdown the computation.
+   * Gives users a chance to perform some cleanup before the process
+   * is killed.
+   */
+  public abstract void destroy();
 
   /**
    * Process incoming records on one of the computation's `istreams`.

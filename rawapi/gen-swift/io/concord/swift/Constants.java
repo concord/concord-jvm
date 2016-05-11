@@ -1,4 +1,4 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.google.common.collect.*;
@@ -19,8 +19,6 @@ public final class Constants
 
     public static final String kConcordEnvKeyClientProxyAddr = "CONCORD_client_proxy_address";
 
-    public static final int kDatabaseEntryTTL = 43200;
-
     public static final String kDatabasePath = "/tmp";
 
     public static final int kDefaultBatchSize = 2048;
@@ -28,6 +26,8 @@ public final class Constants
     public static final int kDefaultThriftServiceIOThreads = 2;
 
     public static final int kDefaultTraceSampleEveryN = 1024;
+
+    public static final String kDispatcherMonitoringName = "dispatcher";
 
     public static final String kIncomingMessageQueueTopic = "incoming";
 
@@ -40,6 +40,8 @@ public final class Constants
     public static final String kOutgoingMessageQueueTopic = "outgoing";
 
     public static final String kPrincipalComputationName = "principal_computation";
+
+    public static final String kPrincipalMonitoringName = "principal";
 
     public static final String kPrincipalTimerQueueTopic = "principal_timers";
 

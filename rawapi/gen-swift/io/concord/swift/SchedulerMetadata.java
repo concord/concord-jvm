@@ -1,7 +1,8 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
+import com.facebook.swift.codec.ThriftField.Recursiveness;
 import java.util.*;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -63,5 +64,29 @@ public final class SchedulerMetadata
             .add("endpoint", endpoint)
             .add("version", version)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SchedulerMetadata other = (SchedulerMetadata)o;
+
+        return
+            Objects.equals(endpoint, other.endpoint) &&
+            Objects.equals(version, other.version);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(new Object[] {
+            endpoint,
+            version
+        });
     }
 }

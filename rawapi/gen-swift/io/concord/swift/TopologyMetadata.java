@@ -1,7 +1,8 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
+import com.facebook.swift.codec.ThriftField.Recursiveness;
 import java.util.*;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -95,5 +96,33 @@ public final class TopologyMetadata
             .add("frameworkID", frameworkID)
             .add("kafkaBrokerList", kafkaBrokerList)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TopologyMetadata other = (TopologyMetadata)o;
+
+        return
+            Objects.equals(version, other.version) &&
+            Objects.equals(computations, other.computations) &&
+            Objects.equals(frameworkID, other.frameworkID) &&
+            Objects.equals(kafkaBrokerList, other.kafkaBrokerList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(new Object[] {
+            version,
+            computations,
+            frameworkID,
+            kafkaBrokerList
+        });
     }
 }

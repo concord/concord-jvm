@@ -1,4 +1,4 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
@@ -20,6 +20,12 @@ public interface ComputationService extends Closeable
                           @ThriftException(type=BoltError.class, id=1)
                       })
         ListenableFuture<ComputationTx> init();
+
+        @ThriftMethod(value = "destroy",
+                      exception = {
+                          @ThriftException(type=BoltError.class, id=1)
+                      })
+        ListenableFuture<Void> destroy();
 
         @ThriftMethod(value = "boltProcessRecords",
                       exception = {
@@ -52,6 +58,12 @@ public interface ComputationService extends Closeable
                       @ThriftException(type=BoltError.class, id=1)
                   })
     ComputationTx init() throws BoltError, org.apache.thrift.TException;
+
+    @ThriftMethod(value = "destroy",
+                  exception = {
+                      @ThriftException(type=BoltError.class, id=1)
+                  })
+    void destroy() throws BoltError, org.apache.thrift.TException;
 
     @ThriftMethod(value = "boltProcessRecords",
                   exception = {

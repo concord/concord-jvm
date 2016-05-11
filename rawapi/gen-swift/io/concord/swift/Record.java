@@ -1,7 +1,8 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
+import com.facebook.swift.codec.ThriftField.Recursiveness;
 import java.util.*;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -13,9 +14,9 @@ public final class Record
     public Record(
         @ThriftField(value=1, name="meta", requiredness=Requiredness.NONE) final RecordMetadata meta,
         @ThriftField(value=2, name="time", requiredness=Requiredness.NONE) final long time,
-        @ThriftField(value=3, name="key", requiredness=Requiredness.NONE) final byte [] key,
-        @ThriftField(value=4, name="data", requiredness=Requiredness.NONE) final byte [] data,
-        @ThriftField(value=5, name="userStream", requiredness=Requiredness.NONE) final byte [] userStream
+        @ThriftField(value=3, name="key", requiredness=Requiredness.NONE) final byte[] key,
+        @ThriftField(value=4, name="data", requiredness=Requiredness.NONE) final byte[] data,
+        @ThriftField(value=5, name="userStream", requiredness=Requiredness.NONE) final byte[] userStream
     ) {
         this.meta = meta;
         this.time = time;
@@ -37,21 +38,21 @@ public final class Record
             this.time = time;
             return this;
         }
-        private byte [] key;
+        private byte[] key;
 
-        public Builder setKey(byte [] key) {
+        public Builder setKey(byte[] key) {
             this.key = key;
             return this;
         }
-        private byte [] data;
+        private byte[] data;
 
-        public Builder setData(byte [] data) {
+        public Builder setData(byte[] data) {
             this.data = data;
             return this;
         }
-        private byte [] userStream;
+        private byte[] userStream;
 
-        public Builder setUserStream(byte [] userStream) {
+        public Builder setUserStream(byte[] userStream) {
             this.userStream = userStream;
             return this;
         }
@@ -86,20 +87,20 @@ public final class Record
     @ThriftField(value=2, name="time", requiredness=Requiredness.NONE)
     public long getTime() { return time; }
 
-    private final byte [] key;
+    private final byte[] key;
 
     @ThriftField(value=3, name="key", requiredness=Requiredness.NONE)
-    public byte [] getKey() { return key; }
+    public byte[] getKey() { return key; }
 
-    private final byte [] data;
+    private final byte[] data;
 
     @ThriftField(value=4, name="data", requiredness=Requiredness.NONE)
-    public byte [] getData() { return data; }
+    public byte[] getData() { return data; }
 
-    private final byte [] userStream;
+    private final byte[] userStream;
 
     @ThriftField(value=5, name="userStream", requiredness=Requiredness.NONE)
-    public byte [] getUserStream() { return userStream; }
+    public byte[] getUserStream() { return userStream; }
 
     @Override
     public String toString()
@@ -111,5 +112,35 @@ public final class Record
             .add("data", data)
             .add("userStream", userStream)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Record other = (Record)o;
+
+        return
+            Objects.equals(meta, other.meta) &&
+            Objects.equals(time, other.time) &&
+            Arrays.equals(key, other.key) &&
+            Arrays.equals(data, other.data) &&
+            Arrays.equals(userStream, other.userStream);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(new Object[] {
+            meta,
+            time,
+            key,
+            data,
+            userStream
+        });
     }
 }

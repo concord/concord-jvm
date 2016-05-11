@@ -1,4 +1,4 @@
-package com.concord.swift;
+package io.concord.swift;
 
 import com.facebook.swift.codec.*;
 import com.facebook.swift.codec.ThriftField.Requiredness;
@@ -27,7 +27,7 @@ public interface BoltSchedulerService extends Closeable
                       exception = {
                           @ThriftException(type=BoltError.class, id=1)
                       })
-        ListenableFuture<byte []> getComputationSlug(
+        ListenableFuture<byte[]> getComputationSlug(
             @ThriftField(value=1, name="computationName", requiredness=Requiredness.NONE) final String computationName
         );
 
@@ -71,7 +71,7 @@ public interface BoltSchedulerService extends Closeable
                   exception = {
                       @ThriftException(type=BoltError.class, id=1)
                   })
-    byte [] getComputationSlug(
+    byte[] getComputationSlug(
         @ThriftField(value=1, name="computationName", requiredness=Requiredness.NONE) final String computationName
     ) throws BoltError, org.apache.thrift.TException;
 

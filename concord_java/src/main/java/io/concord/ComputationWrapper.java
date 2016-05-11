@@ -1,9 +1,9 @@
-package com.concord;
+package io.concord;
 
-import com.concord.Metadata;
-import com.concord.ComputationContextImpl;
-import com.concord.StreamTuple;
-import com.concord.swift.*;
+import io.concord.Metadata;
+import io.concord.ComputationContextImpl;
+import io.concord.StreamTuple;
+import io.concord.swift.*;
 import com.facebook.swift.service.*;
 import com.facebook.nifty.client.FramedClientConnector;
 import com.google.common.net.HostAndPort;
@@ -56,6 +56,10 @@ public class ComputationWrapper implements ComputationService {
         .setRecords(ctx.getRecords())
         .setTimers(ctx.getTimers())
         .build();
+  }
+
+  public void destroy() {
+    this.userService.destroy();
   }
 
   public ComputationTx boltProcessTimer(String key, long time) {
