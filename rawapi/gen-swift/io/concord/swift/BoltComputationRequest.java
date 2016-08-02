@@ -20,7 +20,8 @@ public final class BoltComputationRequest
         @ThriftField(value=6, name="taskHelper", requiredness=Requiredness.NONE) final ExecutorTaskInfoHelper taskHelper,
         @ThriftField(value=7, name="forceUpdateBinary", requiredness=Requiredness.NONE) final boolean forceUpdateBinary,
         @ThriftField(value=8, name="slug", requiredness=Requiredness.NONE) final byte[] slug,
-        @ThriftField(value=9, name="forcePullContainer", requiredness=Requiredness.NONE) final boolean forcePullContainer
+        @ThriftField(value=9, name="forcePullContainer", requiredness=Requiredness.NONE) final boolean forcePullContainer,
+        @ThriftField(value=10, name="executorArgs", requiredness=Requiredness.NONE) final List<String> executorArgs
     ) {
         this.name = name;
         this.instances = instances;
@@ -31,6 +32,7 @@ public final class BoltComputationRequest
         this.forceUpdateBinary = forceUpdateBinary;
         this.slug = slug;
         this.forcePullContainer = forcePullContainer;
+        this.executorArgs = executorArgs;
     }
 
     public static class Builder {
@@ -88,6 +90,12 @@ public final class BoltComputationRequest
             this.forcePullContainer = forcePullContainer;
             return this;
         }
+        private List<String> executorArgs;
+
+        public Builder setExecutorArgs(List<String> executorArgs) {
+            this.executorArgs = executorArgs;
+            return this;
+        }
 
         public Builder() { }
         public Builder(BoltComputationRequest other) {
@@ -100,6 +108,7 @@ public final class BoltComputationRequest
             this.forceUpdateBinary = other.forceUpdateBinary;
             this.slug = other.slug;
             this.forcePullContainer = other.forcePullContainer;
+            this.executorArgs = other.executorArgs;
         }
 
         public BoltComputationRequest build() {
@@ -112,7 +121,8 @@ public final class BoltComputationRequest
                 this.taskHelper,
                 this.forceUpdateBinary,
                 this.slug,
-                this.forcePullContainer
+                this.forcePullContainer,
+                this.executorArgs
             );
         }
     }
@@ -162,6 +172,11 @@ public final class BoltComputationRequest
     @ThriftField(value=9, name="forcePullContainer", requiredness=Requiredness.NONE)
     public boolean isForcePullContainer() { return forcePullContainer; }
 
+    private final List<String> executorArgs;
+
+    @ThriftField(value=10, name="executorArgs", requiredness=Requiredness.NONE)
+    public List<String> getExecutorArgs() { return executorArgs; }
+
     @Override
     public String toString()
     {
@@ -175,6 +190,7 @@ public final class BoltComputationRequest
             .add("forceUpdateBinary", forceUpdateBinary)
             .add("slug", slug)
             .add("forcePullContainer", forcePullContainer)
+            .add("executorArgs", executorArgs)
             .toString();
     }
 
@@ -198,7 +214,8 @@ public final class BoltComputationRequest
             Objects.equals(taskHelper, other.taskHelper) &&
             Objects.equals(forceUpdateBinary, other.forceUpdateBinary) &&
             Arrays.equals(slug, other.slug) &&
-            Objects.equals(forcePullContainer, other.forcePullContainer);
+            Objects.equals(forcePullContainer, other.forcePullContainer) &&
+            Objects.equals(executorArgs, other.executorArgs);
     }
 
     @Override
@@ -212,7 +229,8 @@ public final class BoltComputationRequest
             taskHelper,
             forceUpdateBinary,
             slug,
-            forcePullContainer
+            forcePullContainer,
+            executorArgs
         });
     }
 }

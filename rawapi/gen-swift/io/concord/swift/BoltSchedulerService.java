@@ -39,15 +39,6 @@ public interface BoltSchedulerService extends Closeable
             @ThriftField(value=1, name="computation", requiredness=Requiredness.NONE) final ComputationMetadata computation
         );
 
-        @ThriftMethod(value = "scaleComputation",
-                      exception = {
-                          @ThriftException(type=BoltError.class, id=1)
-                      })
-        ListenableFuture<Void> scaleComputation(
-            @ThriftField(value=1, name="computationName", requiredness=Requiredness.NONE) final String computationName,
-            @ThriftField(value=2, name="instances", requiredness=Requiredness.NONE) final long instances
-        );
-
         @ThriftMethod(value = "killTask",
                       exception = {
                           @ThriftException(type=BoltError.class, id=1)
@@ -81,15 +72,6 @@ public interface BoltSchedulerService extends Closeable
                   })
     TopologyMetadata registerComputation(
         @ThriftField(value=1, name="computation", requiredness=Requiredness.NONE) final ComputationMetadata computation
-    ) throws BoltError, org.apache.thrift.TException;
-
-    @ThriftMethod(value = "scaleComputation",
-                  exception = {
-                      @ThriftException(type=BoltError.class, id=1)
-                  })
-    void scaleComputation(
-        @ThriftField(value=1, name="computationName", requiredness=Requiredness.NONE) final String computationName,
-        @ThriftField(value=2, name="instances", requiredness=Requiredness.NONE) final long instances
     ) throws BoltError, org.apache.thrift.TException;
 
     @ThriftMethod(value = "killTask",

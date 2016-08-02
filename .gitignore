@@ -13,3 +13,6 @@ hs_err_pid*
 .ensime
 target/
 .ensime_cache/
+
+# Generated code
+rawapi/gen-swift
