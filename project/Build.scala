@@ -22,13 +22,7 @@ object ConcordJvmBuild extends Build {
     .dependsOn(rawapi)
     .settings(buildSettings: _*)
 
-  lazy val concord_kafka_consumer = project
-    .dependsOn(rawapi)
-    .dependsOn(concord_java)
-    .settings(buildSettings: _*)
-
-
   lazy val root = (project in file("."))
-    .aggregate(rawapi, concord_java, concord_kafka_consumer)
+    .aggregate(rawapi, concord_java)
     .settings(buildSettings: _*)
 }

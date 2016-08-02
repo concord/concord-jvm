@@ -2,14 +2,12 @@
 
 set -e
 
-ROOT=$(git rev-parse --show-toplevel)
-PROJ_ROOT=$ROOT/client/jvm
+PROJ_ROOT=$(git rev-parse --show-toplevel)
 CURRENT=$(pwd)
 WORK_DIR=$(mktemp -d)
 
 # Clean up, then package and create pom's
 rm -rf $PROJ_ROOT/concord_java/target
-rm -rf $PROJ_ROOT/concord_kafka_consumer/target
 rm -rf $PROJ_ROOT/rawapi/target
 cd $PROJ_ROOT
 sbt package make-pom
