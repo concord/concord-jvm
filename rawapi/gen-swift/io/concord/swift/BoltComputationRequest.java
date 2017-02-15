@@ -15,13 +15,14 @@ public final class BoltComputationRequest
         @ThriftField(value=1, name="name", requiredness=Requiredness.NONE) final String name,
         @ThriftField(value=2, name="instances", requiredness=Requiredness.NONE) final long instances,
         @ThriftField(value=3, name="cpus", requiredness=Requiredness.NONE) final double cpus,
-        @ThriftField(value=4, name="mem", requiredness=Requiredness.NONE) final long mem,
-        @ThriftField(value=5, name="disk", requiredness=Requiredness.NONE) final long disk,
+        @ThriftField(value=4, name="mem", requiredness=Requiredness.NONE) final double mem,
+        @ThriftField(value=5, name="disk", requiredness=Requiredness.NONE) final double disk,
         @ThriftField(value=6, name="taskHelper", requiredness=Requiredness.NONE) final ExecutorTaskInfoHelper taskHelper,
         @ThriftField(value=7, name="forceUpdateBinary", requiredness=Requiredness.NONE) final boolean forceUpdateBinary,
         @ThriftField(value=8, name="slug", requiredness=Requiredness.NONE) final byte[] slug,
         @ThriftField(value=9, name="forcePullContainer", requiredness=Requiredness.NONE) final boolean forcePullContainer,
-        @ThriftField(value=10, name="executorArgs", requiredness=Requiredness.NONE) final List<String> executorArgs
+        @ThriftField(value=10, name="executorArgs", requiredness=Requiredness.NONE) final List<String> executorArgs,
+        @ThriftField(value=11, name="gpus", requiredness=Requiredness.NONE) final double gpus
     ) {
         this.name = name;
         this.instances = instances;
@@ -33,6 +34,7 @@ public final class BoltComputationRequest
         this.slug = slug;
         this.forcePullContainer = forcePullContainer;
         this.executorArgs = executorArgs;
+        this.gpus = gpus;
     }
 
     public static class Builder {
@@ -54,15 +56,15 @@ public final class BoltComputationRequest
             this.cpus = cpus;
             return this;
         }
-        private long mem;
+        private double mem;
 
-        public Builder setMem(long mem) {
+        public Builder setMem(double mem) {
             this.mem = mem;
             return this;
         }
-        private long disk;
+        private double disk;
 
-        public Builder setDisk(long disk) {
+        public Builder setDisk(double disk) {
             this.disk = disk;
             return this;
         }
@@ -96,6 +98,12 @@ public final class BoltComputationRequest
             this.executorArgs = executorArgs;
             return this;
         }
+        private double gpus;
+
+        public Builder setGpus(double gpus) {
+            this.gpus = gpus;
+            return this;
+        }
 
         public Builder() { }
         public Builder(BoltComputationRequest other) {
@@ -109,6 +117,7 @@ public final class BoltComputationRequest
             this.slug = other.slug;
             this.forcePullContainer = other.forcePullContainer;
             this.executorArgs = other.executorArgs;
+            this.gpus = other.gpus;
         }
 
         public BoltComputationRequest build() {
@@ -122,7 +131,8 @@ public final class BoltComputationRequest
                 this.forceUpdateBinary,
                 this.slug,
                 this.forcePullContainer,
-                this.executorArgs
+                this.executorArgs,
+                this.gpus
             );
         }
     }
@@ -142,15 +152,15 @@ public final class BoltComputationRequest
     @ThriftField(value=3, name="cpus", requiredness=Requiredness.NONE)
     public double getCpus() { return cpus; }
 
-    private final long mem;
+    private final double mem;
 
     @ThriftField(value=4, name="mem", requiredness=Requiredness.NONE)
-    public long getMem() { return mem; }
+    public double getMem() { return mem; }
 
-    private final long disk;
+    private final double disk;
 
     @ThriftField(value=5, name="disk", requiredness=Requiredness.NONE)
-    public long getDisk() { return disk; }
+    public double getDisk() { return disk; }
 
     private final ExecutorTaskInfoHelper taskHelper;
 
@@ -177,6 +187,11 @@ public final class BoltComputationRequest
     @ThriftField(value=10, name="executorArgs", requiredness=Requiredness.NONE)
     public List<String> getExecutorArgs() { return executorArgs; }
 
+    private final double gpus;
+
+    @ThriftField(value=11, name="gpus", requiredness=Requiredness.NONE)
+    public double getGpus() { return gpus; }
+
     @Override
     public String toString()
     {
@@ -191,6 +206,7 @@ public final class BoltComputationRequest
             .add("slug", slug)
             .add("forcePullContainer", forcePullContainer)
             .add("executorArgs", executorArgs)
+            .add("gpus", gpus)
             .toString();
     }
 
@@ -215,7 +231,8 @@ public final class BoltComputationRequest
             Objects.equals(forceUpdateBinary, other.forceUpdateBinary) &&
             Arrays.equals(slug, other.slug) &&
             Objects.equals(forcePullContainer, other.forcePullContainer) &&
-            Objects.equals(executorArgs, other.executorArgs);
+            Objects.equals(executorArgs, other.executorArgs) &&
+            Objects.equals(gpus, other.gpus);
     }
 
     @Override
@@ -230,7 +247,8 @@ public final class BoltComputationRequest
             forceUpdateBinary,
             slug,
             forcePullContainer,
-            executorArgs
+            executorArgs,
+            gpus
         });
     }
 }

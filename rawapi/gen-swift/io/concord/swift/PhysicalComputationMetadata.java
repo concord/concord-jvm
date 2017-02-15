@@ -15,11 +15,12 @@ public final class PhysicalComputationMetadata
         @ThriftField(value=1, name="taskId", requiredness=Requiredness.NONE) final String taskId,
         @ThriftField(value=2, name="slaveId", requiredness=Requiredness.NONE) final String slaveId,
         @ThriftField(value=3, name="cpus", requiredness=Requiredness.NONE) final double cpus,
-        @ThriftField(value=4, name="mem", requiredness=Requiredness.NONE) final int mem,
-        @ThriftField(value=5, name="disk", requiredness=Requiredness.NONE) final int disk,
+        @ThriftField(value=4, name="mem", requiredness=Requiredness.NONE) final double mem,
+        @ThriftField(value=5, name="disk", requiredness=Requiredness.NONE) final double disk,
         @ThriftField(value=6, name="taskHelper", requiredness=Requiredness.NONE) final ExecutorTaskInfoHelper taskHelper,
         @ThriftField(value=7, name="needsReconciliation", requiredness=Requiredness.NONE) final boolean needsReconciliation,
-        @ThriftField(value=8, name="killed", requiredness=Requiredness.NONE) final boolean killed
+        @ThriftField(value=8, name="killed", requiredness=Requiredness.NONE) final boolean killed,
+        @ThriftField(value=9, name="gpus", requiredness=Requiredness.NONE) final double gpus
     ) {
         this.taskId = taskId;
         this.slaveId = slaveId;
@@ -29,6 +30,7 @@ public final class PhysicalComputationMetadata
         this.taskHelper = taskHelper;
         this.needsReconciliation = needsReconciliation;
         this.killed = killed;
+        this.gpus = gpus;
     }
 
     public static class Builder {
@@ -50,15 +52,15 @@ public final class PhysicalComputationMetadata
             this.cpus = cpus;
             return this;
         }
-        private int mem;
+        private double mem;
 
-        public Builder setMem(int mem) {
+        public Builder setMem(double mem) {
             this.mem = mem;
             return this;
         }
-        private int disk;
+        private double disk;
 
-        public Builder setDisk(int disk) {
+        public Builder setDisk(double disk) {
             this.disk = disk;
             return this;
         }
@@ -80,6 +82,12 @@ public final class PhysicalComputationMetadata
             this.killed = killed;
             return this;
         }
+        private double gpus;
+
+        public Builder setGpus(double gpus) {
+            this.gpus = gpus;
+            return this;
+        }
 
         public Builder() { }
         public Builder(PhysicalComputationMetadata other) {
@@ -91,6 +99,7 @@ public final class PhysicalComputationMetadata
             this.taskHelper = other.taskHelper;
             this.needsReconciliation = other.needsReconciliation;
             this.killed = other.killed;
+            this.gpus = other.gpus;
         }
 
         public PhysicalComputationMetadata build() {
@@ -102,7 +111,8 @@ public final class PhysicalComputationMetadata
                 this.disk,
                 this.taskHelper,
                 this.needsReconciliation,
-                this.killed
+                this.killed,
+                this.gpus
             );
         }
     }
@@ -122,15 +132,15 @@ public final class PhysicalComputationMetadata
     @ThriftField(value=3, name="cpus", requiredness=Requiredness.NONE)
     public double getCpus() { return cpus; }
 
-    private final int mem;
+    private final double mem;
 
     @ThriftField(value=4, name="mem", requiredness=Requiredness.NONE)
-    public int getMem() { return mem; }
+    public double getMem() { return mem; }
 
-    private final int disk;
+    private final double disk;
 
     @ThriftField(value=5, name="disk", requiredness=Requiredness.NONE)
-    public int getDisk() { return disk; }
+    public double getDisk() { return disk; }
 
     private final ExecutorTaskInfoHelper taskHelper;
 
@@ -147,6 +157,11 @@ public final class PhysicalComputationMetadata
     @ThriftField(value=8, name="killed", requiredness=Requiredness.NONE)
     public boolean isKilled() { return killed; }
 
+    private final double gpus;
+
+    @ThriftField(value=9, name="gpus", requiredness=Requiredness.NONE)
+    public double getGpus() { return gpus; }
+
     @Override
     public String toString()
     {
@@ -159,6 +174,7 @@ public final class PhysicalComputationMetadata
             .add("taskHelper", taskHelper)
             .add("needsReconciliation", needsReconciliation)
             .add("killed", killed)
+            .add("gpus", gpus)
             .toString();
     }
 
@@ -181,7 +197,8 @@ public final class PhysicalComputationMetadata
             Objects.equals(disk, other.disk) &&
             Objects.equals(taskHelper, other.taskHelper) &&
             Objects.equals(needsReconciliation, other.needsReconciliation) &&
-            Objects.equals(killed, other.killed);
+            Objects.equals(killed, other.killed) &&
+            Objects.equals(gpus, other.gpus);
     }
 
     @Override
@@ -194,7 +211,8 @@ public final class PhysicalComputationMetadata
             disk,
             taskHelper,
             needsReconciliation,
-            killed
+            killed,
+            gpus
         });
     }
 }
